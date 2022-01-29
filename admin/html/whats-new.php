@@ -1,6 +1,139 @@
 <?php
 $changelog = [
     [
+        'version'  => 'Version 3.5.22',
+        'released' => '2021-10-28',
+        'changes'  =>  [
+
+            [
+                'title' => __( 'Featured item for subscriber', 'wp-user-frontend' ),
+                'type'  => 'Enhancement',
+            ],
+            [
+                'title' => __( 'Warning added for unsaved form data on frontend', 'wp-user-frontend' ),
+                'type'  => 'Enhancement',
+            ],
+            [
+                'title' => __( 'Settings page search implemented', 'wp-user-frontend' ),
+                'type'  => 'Enhancement',
+            ],
+            [
+                'title' => __( 'Editor added for registration form email template', 'wp-user-frontend' ),
+                'type'  => 'Enhancement',
+            ],
+            [
+                'title' => __( 'Fallback pay per post not working with when draft enabled', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'User Dashboard responsive issues fixed', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Showing wrong license expire message handled', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Remove expire cron handled for once daily', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Billing address validation handled', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Promotion notice restricted for WPUF menu', 'wp-user-frontend' ),
+                'type'  => 'Update',
+            ],
+        ],
+    ],
+     [
+        'version'  => 'Version 3.5.21',
+        'released' => '2021-10-21',
+        'changes'  =>  [
+
+            [
+                'title' => __( 'reCaptcha issue with other plugin handled', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Multiple post type for wpuf dashboard not working fixed', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Billing address ajax request issue handled', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Halloween promotion notice added', 'wp-user-frontend' ),
+                'type'  => 'Update',
+            ],
+        ],
+    ],
+     [
+        'version'  => 'Version 3.5.20',
+        'released' => '2021-09-16',
+        'changes'  =>  [
+
+            [
+                'title' => __( 'Content restriction for minimum, maximum value enhanced', 'wp-user-frontend' ),
+                'type'  => 'Enhancement',
+            ],
+            [
+                'title' => __( 'New option for redirection after pay per post payment in form setting', 'wp-user-frontend' ),
+                'type'  => 'Enhancement',
+            ],
+            [
+                'title' => __( 'Controller added for various email notification', 'wp-user-frontend' ),
+                'type'  => 'Enhancement',
+            ],
+            [
+                'title' => __( 'Placeholder added for unauth message option', 'wp-user-frontend' ),
+                'type'  => 'Enhancement',
+            ],
+            [
+                'title' => __( 'Subscription Post expiration option change to input field', 'wp-user-frontend' ),
+                'type'  => 'Update',
+            ],
+            [
+                'title' => __( 'Content restriction message translatable', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'ACF integration inconsistency handled', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Enable payment checkbox handled for child option', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Broken asset link handled for custom field popup', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Rollback inconsistency for CPT handled', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Login form loaded after resetting password', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Billing address inconsistency handled', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Form duplication on creation handled', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+            [
+                'title' => __( 'Field Dragging inconsistency fixed', 'wp-user-frontend' ),
+                'type'  => 'Fix',
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.5.18',
         'released' => '2021-07-06',
         'changes'  =>  [

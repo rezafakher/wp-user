@@ -2035,7 +2035,7 @@ function wpuf_get_account_sections() {
     }
 
     $sections = array_merge(
-        // dashboard should be the first item
+    // dashboard should be the first item
         [ 'dashboard' => __( 'Dashboard', 'wp-user-frontend' ) ],
         $cpt_sections,
         $sections
@@ -2562,17 +2562,17 @@ function wpuf_trim_zeros( $price ) {
  */
 function wpuf_format_price( $price, $formated = true, $args = [] ) {
 
-      $price_args = apply_filters(
-            'wpuf_price_args', wp_parse_args(
-                $args, [
-                    'currency'           => $formated ? wpuf_get_currency( 'symbol' ) : '',
-                    'decimal_separator'  => wpuf_get_price_decimal_separator(),
-                    'thousand_separator' => $formated ? wpuf_get_price_thousand_separator() : '',
-                    'decimals'           => wpuf_get_price_decimals(),
-                    'price_format'       => get_wpuf_price_format(),
-                ]
-            )
-        );
+    $price_args = apply_filters(
+        'wpuf_price_args', wp_parse_args(
+            $args, [
+                'currency'           => $formated ? wpuf_get_currency( 'symbol' ) : '',
+                'decimal_separator'  => wpuf_get_price_decimal_separator(),
+                'thousand_separator' => $formated ? wpuf_get_price_thousand_separator() : '',
+                'decimals'           => wpuf_get_price_decimals(),
+                'price_format'       => get_wpuf_price_format(),
+            ]
+        )
+    );
 
     $currency = $price_args['currency'];
     $decimal_separator = $price_args['decimal_separator'];
@@ -2766,7 +2766,7 @@ function wpuf_create_sample_form( $post_title = 'Sample Form', $post_type = 'wpu
             'guest_details'       => 'true',
             'name_label'          => 'Name',
             'email_label'         => 'Email',
-            'message_restrict'    => 'This page is restricted. Please Log in / Register to view this page.',
+            'message_restrict'    => 'This page is restricted. Please %login% / %register% to view this page.',
             'redirect_to'         => 'post',
             'message'             => 'Post saved',
             'page_id'             => '',
@@ -3063,6 +3063,10 @@ function wpuf_decryption( $id ) {
  * @return void
  */
 function wpuf_send_mail_to_guest( $post_id_encoded, $form_id_encoded, $charging_enabled, $flag ) {
+    if ( 'on' !== wpuf_get_option( 'enable_guest_email_notification', 'wpuf_mails', 'on' ) ) {
+        return;
+    }
+
     $noce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_key( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
 
     if ( isset( $nonce ) && ! wp_verify_nonce( $noce, 'wpuf_edit' ) ) {
@@ -3557,9 +3561,27 @@ function wpuf_ajax_get_states_field() {
             'options'          => $states,
             'show_option_all'  => false,
             'show_option_none' => false,
+            'data'             => [ 'required' => 'yes', 'type' => 'select' ],
         ];
 
-        $response = wpuf_select( $args );
+        $allowed_html = [
+            'select' => [
+                'class'            => [],
+                'name'             => [],
+                'id'               => [],
+                'data-placeholder' => [],
+                'data-required'    => [],
+                'data-type'        => [],
+            ],
+            'option' => [
+                'value'    => [],
+                'class'    => [],
+                'id'       => [],
+                'selected' => []
+            ],
+        ];
+
+        $response = wp_kses( wpuf_select( $args ), $allowed_html );
     } else {
         $response = 'nostates';
     }
@@ -3724,11 +3746,11 @@ function wpuf_show_form_schedule_message( $form_id ) {
             echo wp_kses_post( '<div class="wpuf-message">' . $form_settings['form_expired_message'] . '</div>' );
         }
         ?>
-            <script>
-                jQuery( function($) {
-                    $(".wpuf-submit-button").attr("disabled", "disabled");
-                });
-            </script>
+        <script>
+            jQuery( function($) {
+                $(".wpuf-submit-button").attr("disabled", "disabled");
+            });
+        </script>
         <?php
         return;
     }
@@ -3904,11 +3926,11 @@ function get_wpuf_preview_page() {
     $post_status     = '';
     $preview_page_id = get_option( 'wpuf_preview_page', false );
 
-    if ( isset( $preview_page_id ) ){
+    if ( $preview_page_id ){
         $page_url    = get_permalink( $preview_page_id );
     }
 
-    if ( isset( $page_url ) ){
+    if ( $page_url ){
         $post_status = get_post_status( $preview_page_id );
     }
 
@@ -3916,7 +3938,7 @@ function get_wpuf_preview_page() {
         return $page_url;
     }
 
-    if ( $post_status !== 'private' ) {
+    if ( $post_status && $post_status !== 'private' ) {
         wp_update_post(
             [
                 'ID' => $preview_page_id,
@@ -3960,4 +3982,33 @@ function wpuf_recursive_sanitize_text_field($arr){
     }
 
     return $arr;
+}
+
+/**
+ * Determine page after payment success
+ *
+ * @since WPUF_PRO
+ *
+ * @param $data
+ *
+ * @return bool|false|string|WP_Error
+ */
+function wpuf_payment_success_page( $data ){
+    $gateway          = ! empty( $data['wpuf_payment_method'] ) ? $data['wpuf_payment_method'] : '';
+    $success_query    = "wpuf_${gateway}_success";
+    $redirect_page    = '';
+    $redirect_page_id = wpuf_get_option( 'payment_success', 'wpuf_payment' );
+    if ( 'post' === $data['type'] ){
+        $post_id           = array_key_exists( 'item_number', $data ) && ! empty( $data['item_number'] ) ? $data['item_number'] : $_GET['post_id'];
+        $form_id           = get_post_meta( $post_id, '_wpuf_form_id', true );
+        $form_settings     = wpuf_get_form_settings( $form_id );
+        $ppp_success_page  = ! empty( $form_settings['ppp_payment_success_page'] ) ? $form_settings['ppp_payment_success_page'] : '';
+        $redirect_page_id  = $ppp_success_page ? $ppp_success_page : $redirect_page_id;
+    }
+
+    $redirect_page = $redirect_page_id ? add_query_arg( 'action', $success_query,  untrailingslashit( get_permalink( $redirect_page_id ) ) ) : add_query_arg( 'action', $success_query, untrailingslashit( get_permalink( wpuf_get_option( 'subscription_page', 'wpuf_payment' ) ) ) );
+    //for bank
+    $redirect_page =  ! empty( $data['wpuf_payment_method'] ) && 'bank' === $data['wpuf_payment_method'] ? get_permalink( wpuf_get_option( 'bank_success', 'wpuf_payment' ) ) : $redirect_page;
+
+    return $redirect_page;
 }

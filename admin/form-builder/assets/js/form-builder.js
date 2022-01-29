@@ -151,8 +151,8 @@
                     var el = $('#form-preview-stage .wpuf-form .field-items').eq(payload.toIndex);
                     if ('yes' == payload.field.is_meta && state.show_custom_field_tooltip) {
 
-                        var image_one  = wpuf_assets_url + '/images/custom-fields/settings.png';
-                        var image_two  = wpuf_assets_url + '/images/custom-fields/advance.png';
+                        var image_one  = wpuf_assets_url.url + '/images/custom-fields/settings.png';
+                        var image_two  = wpuf_assets_url.url + '/images/custom-fields/advance.png';
                         var html       = '<div class="wpuf-custom-field-instruction">';
                             html      += '<div class="step-one">';
                             html      += sprintf( '<p style="font-weight: 400">%s<strong><code>%s</code></strong>%s"</p>', __( 'Navigate through', 'wp-user-frontend' ), __( 'WP-admin > WPUF > Settings > Frontend Posting', 'wp-user-frontend' ), __( '- there you have to check the checkbox: "Show custom field data in the post content area', 'wp-user-frontend' ) );
@@ -177,7 +177,7 @@
                             if (result) {
                                 state.show_custom_field_tooltip = false;
                             } else {
-                                
+
                             }
                         } );
                     }
@@ -535,6 +535,13 @@
                 self.is_form_saving = true;
                 self.set_current_panel('form-fields');
 
+                var form_id = $('#wpuf-form-builder [name="wpuf_form_id"]').val();
+
+                if ( typeof tinyMCE !== 'undefined' ) {
+                    $('textarea[name="wpuf_settings[notification][verification_body]"]').val(tinyMCE.get('wpuf_verification_body_' + form_id).getContent());
+                    $('textarea[name="wpuf_settings[notification][welcome_email_body]"]').val(tinyMCE.get('wpuf_welcome_email_body_' + form_id).getContent());
+                }
+
                 wp.ajax.send('wpuf_form_builder_save_form', {
                     data: {
                         form_data: $('#wpuf-form-builder').serialize(),
@@ -672,10 +679,9 @@
             if ( $(this).is(':checked') ) {
                 table.find('tr.show-if-payment').show();
                 table.find('tr.show-if-force-pack').hide();
-
             } else {
                 table.find('tr.show-if-payment').hide();
-
+                table.find('input[type=checkbox]').removeAttr('checked');
             }
         },
 

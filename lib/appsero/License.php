@@ -125,12 +125,10 @@ class License {
 
         $response = $this->client->send_request( $params, $route, true );
 
-        
-            return array(
-                'success' => true,
+        return array(
+        	    'success' => true,
                 'error'   => ''
-            );
-       
+        );
 
         $response = json_decode( wp_remote_retrieve_body( $response ), true );
 
@@ -293,10 +291,9 @@ class License {
         $license['title']            = 'unlimited';
         $license['source_id']        = '100';
         $license['recurring']        = true;
-        $license['key']              = 'nullmasterinbabiato';
-		$license['email']            = 'nullmaster@babiato.org';
+        $license['key']              = 'activated';
+		$license['email']            = 'hello@nullur.com';
         update_option( $this->option_key, $license, false );
-        
     }
 
     /**
@@ -304,7 +301,6 @@ class License {
      */
     public function is_valid() {
         return true;
-        
 
         $license = get_option( $this->option_key, null );
         if ( ! empty( $license['key'] ) && isset( $license['status'] ) && $license['status'] == 'activate' ) {
@@ -321,8 +317,8 @@ class License {
      */
     public function is_valid_by( $option, $value ) {
         $license = get_option( $this->option_key, null );
-        return true;
-     }
+		return true;	
+	}
 
     /**
      * Styles for licenses page
@@ -479,10 +475,7 @@ class License {
      * Show license settings page notices
      */
     private function show_license_page_notices() {
-          $this->error = '';
-		  $this->success = '';
-
-		if ( ! empty( $this->error ) ) :
+            if ( ! empty( $this->error ) ) :
         ?>
             <div class="notice notice-error is-dismissible appsero-license-section">
                 <p><?php echo $this->error; ?></p>
@@ -520,7 +513,7 @@ class License {
      */
     private function active_client_license( $form ) {
         if ( empty( $form['license_key'] ) ) {
-            $form['license_key'] = 'nullmasterinbabiato';
+            $form['license_key'] = 'activated';
         }
 
         $license_key = sanitize_text_field( $form['license_key'] );
@@ -554,20 +547,18 @@ class License {
         $license = get_option( $this->option_key, null );
 
         if ( empty( $license['key'] ) ) {
-            $license['key'] = 'nullmasterinbabiato';
-           
+            $license['key'] = 'activated';
         }
 
         $response = $this->deactivate( $license['key'] );
 
         $data = array(
-            'key'    => 'nullmasterinbabiato',
+            'key'    => 'activated',
             'status' => 'activate',
         );
 
         update_option( $this->option_key, $data, false );
 
-       
         $this->success = 'License deactivated successfully.';
     }
 
@@ -667,14 +658,14 @@ class License {
      */
     private function get_input_license_value( $action, $license ) {
         if ( 'active' == $action ) {
-            return 'nullmasterinbabiato';
+            return 'activated';
         }
 
         if ( 'deactive' == $action ) {
-            $key_length = strlen( 'nullmasterinbabiato' );
+            $key_length = strlen( 'activated' );
 
             return str_pad(
-                substr( 'nullmasterinbabiato', 0, $key_length / 2 ), $key_length, '*'
+                substr( 'activated', 0, $key_length / 2 ), $key_length, '*'
             );
         }
 

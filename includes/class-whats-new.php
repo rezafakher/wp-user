@@ -84,8 +84,9 @@ class WPUF_Whats_New {
      * @return void
      */
     public function admin_notice() {
-          return;
-       
+        if ( !$this->has_new() ) {
+            return;
+        }
 
         wp_enqueue_script( 'wp-util' );
 
